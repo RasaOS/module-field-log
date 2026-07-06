@@ -1,0 +1,69 @@
+# Field Log — {{PROJECT}}
+
+> This file is yours (project-owned). It is the live visit ledger — one
+> entry per customer field visit. `/visit` creates and advances entries;
+> `/debrief` fills the how-it-went half. Read `.claude/field-log-rules.md`
+> for the record + lifecycle; `.claude/field-log-gate.md` for this
+> practice's visit types, debrief template, and travel/billable policy.
+
+**Lifecycle:** `planned → completed → debriefed`. Follow-ups close over
+time, independent of visit state. Ids are `VIS-NNN`, monotonic, never
+reused. Dates absolute. Never revise a visit's honest read after the fact.
+
+**Legend** — `account: @acct-<slug>` (shared account handle) ·
+`billable: yes|no` · each follow-up = `next-action — owner — date`
+(check off `[x]` in place with a close-date when done).
+
+---
+
+<!-- Newest at the top. One entry per visit. Example shapes below — delete
+     them once you file your first real visit. -->
+
+## VIS-002 — Onboarding audit — debriefed
+
+- **account:** @acct-acme
+- **date:** {{TODAY}}
+- **purpose:** On-site audit of their current setup ahead of the rollout.
+- **location:** Acme HQ, Portland
+- **attendees:** ours — Jordan, Sam · theirs — Priya (ops lead), Dana (IT)
+- **travel:** depart 07:40 · arrive 09:15 · onsite 09:30–15:00 · return 16:45
+- **onsite_hours:** 5.5
+- **what_we_did:** Walked their three sites, catalogued the existing gear,
+  ran the intake checklist with Priya's team.
+- **what_we_covered:** Current inventory, network layout, the two blocked
+  integrations, the rollout timeline.
+- **outcome:** Clear picture of scope; two blockers identified and owned.
+- **sentiment:** good
+- **pros:**
+  - Priya's team was prepared — inventory was ready.
+  - Got real access to the systems, not just a slideshow.
+- **cons:**
+  - IT was double-booked; lost an hour waiting on Dana.
+  - Site 3 wasn't accessible — have to go back for it.
+- **followups:**
+  - [ ] Schedule return visit for Site 3 — Jordan — by {{TODAY}}
+  - [ ] Send the blocker write-up to Priya — Sam — by {{TODAY}}
+- **billable:** yes
+- **notes:** Bring the site-3 access form next time.
+
+## VIS-001 — Kickoff meeting — completed
+
+- **account:** @acct-acme
+- **date:** {{TODAY}}
+- **purpose:** First in-person kickoff to scope the engagement.
+- **location:** Acme HQ, Portland
+- **attendees:** ours — Jordan · theirs — Priya
+- **travel:** depart 08:10 · arrive 09:00 · onsite 09:00–11:30 · return 12:15
+- **onsite_hours:** 2.5
+- **what_we_did:** Introductions, walked the proposal, agreed on the audit
+  as the first step.
+- **what_we_covered:** Scope, timeline, who owns what.
+- **outcome:** Audit visit booked (became VIS-002).
+- **sentiment:** (debrief pending)
+- **pros:** (debrief pending)
+- **cons:** (debrief pending)
+- **followups:** (debrief pending)
+- **billable:** no
+- **notes:** —
+
+<!-- Delete the two examples above once you file your first real visit. -->

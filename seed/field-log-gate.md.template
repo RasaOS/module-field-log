@@ -1,0 +1,110 @@
+# Field-Log Gate
+
+**This file is yours.** `rasa.module.field-log` ships the portable field-log
+spine (`.claude/field-log-rules.md` + the `/visit` `/debrief` `/field-log`
+skills), but it deliberately does not decide the four things that vary per
+field practice:
+
+1. **Visit types** — your practice's taxonomy of visits.
+2. **Debrief template** — what "pros / cons / how it went" means here.
+3. **Travel / mileage policy** — how you record and reimburse travel.
+4. **Billable-hours policy** — what makes a visit billable and how hours bill.
+
+This file is where you define all four. `/debrief` reads it and **hard-stops
+if there is no debrief template** — inventing a good debrief for a practice
+it's never seen is the one inference the skill refuses to make. Everything
+below ships as an honest default; replace it with your practice's real
+policy. Running on the defaults is a smell, not a destination.
+
+---
+
+## Visit types (EDIT THIS)
+
+> The kinds of visit your practice makes. `/visit` offers these; the type
+> shapes what `what_we_did` / `what_we_covered` mean. Default is one generic
+> type — replace it.
+
+- `visit` — a generic field engagement. (default)
+
+<!-- Real examples — pick/rename to match your practice:
+- install     — deploy / set up something on-site
+- audit       — assess / inspect / review on-site
+- training    — teach the customer's people
+- support     — fix a problem on-site
+- sales-call  — pre-sale scoping / relationship visit
+- check-in    — routine account touch
+-->
+
+---
+
+## Debrief template (EDIT THIS — REQUIRED for /debrief)
+
+> `/debrief` hard-stops until this section has a template. These are the
+> questions the debrief walks after a visit, and the sentiment scale.
+
+**Sentiment scale** — how you record "how it went":
+
+- `great | good | mixed | rough | bad`  (default; use any scale you like)
+
+**Debrief prompts** — asked in order after each visit:
+
+1. **What did we actually do?** — the real work performed on-site.
+2. **What did we cover?** — topics / systems / agenda items addressed.
+3. **How did it go?** — the honest sentiment (from the scale above).
+4. **Pros** — what went well. Be specific.
+5. **Cons** — what went badly, friction, concerns. Don't soften these —
+   the point of the log is that a future visit reads the honest read.
+6. **Follow-ups** — each as **next-action + owner + date**. The open loop
+   the practice acts on.
+
+<!-- Tune the prompts to your practice. A strategy consult and a plumbing
+     call-out share the record but not the questions. Add practice-specific
+     prompts (e.g. "site-safety notes", "upsell signal", "renewal risk"). -->
+
+---
+
+## Travel / mileage policy (EDIT THIS)
+
+> How your practice records the trip and whether travel is reimbursable /
+> billable. Drives the `travel` segments and `onsite_hours` on each visit.
+
+- Record `travel`: `depart`, `arrive`, `onsite_start`, `onsite_end`, `return`.
+- `onsite_hours` = time between `onsite_start` and `onsite_end`. (default)
+- Mileage: not tracked by default.
+
+<!-- Real examples:
+- Travel time is billable at half rate; mileage reimbursed at $0.67/mi.
+- Record odometer at depart + return; log miles on the visit's notes.
+- On-site hours round up to the nearest 0.25h.
+-->
+
+---
+
+## Billable-hours policy (EDIT THIS)
+
+> What makes a visit billable and how on-site hours become a billable line.
+> Feeds `rasa.module.invoices` if it is mounted.
+
+- A visit is `billable: true` when it does customer-paid work. (default)
+- The billable line = `onsite_hours` at the account's rate. (default)
+
+<!-- Real examples:
+- Only `install` and `support` visits bill; `sales-call` never bills.
+- Travel time bills at half the on-site rate.
+- If module.invoices is mounted, a completed billable visit's onsite_hours
+  + date become the invoice line; note the invoice id back on the visit.
+-->
+
+---
+
+## Note on co-mounted modules
+
+- If `rasa.module.schedule` is mounted, a scheduled booking becomes a
+  `planned` visit — carry the booking id on the visit rather than
+  re-entering the appointment.
+- If `rasa.module.invoices` is mounted, point your billable policy at how a
+  completed visit's hours become an invoice line — one source of truth for
+  "how a visit bills."
+- The `account: @acct-<slug>` handle is shared with every business-ops
+  module; resolve display names from your account ledger if you have one.
+  Do **not** seed a competing accounts registry here.
